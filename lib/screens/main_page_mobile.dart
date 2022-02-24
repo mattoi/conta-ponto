@@ -70,7 +70,10 @@ class _MainPageMobileState extends State<MainPageMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conta ponto'),
+        title: const Text('Conta Ponto',
+            style: TextStyle(
+              fontFamily: 'Roboto',
+            )),
         backgroundColor: UIColors.appBar,
       ),
       floatingActionButton: FloatingActionButton(

@@ -53,10 +53,13 @@ class CounterTile extends StatelessWidget {
           Container(
             //index number
             width: 100,
+            height: 94,
             alignment: Alignment.centerRight,
             child: Text(
               (counter.index + 1).toString(),
-              style: UITextStyles.index,
+              style: (counter.index < 99
+                  ? UITextStyles.index
+                  : UITextStyles.index.copyWith(fontSize: 58)),
             ),
           ),
           const SizedBox(width: 24),
@@ -87,34 +90,6 @@ class CounterTile extends StatelessWidget {
             child: const Icon(FontAwesomeIcons.plus),
             onPressed: () {
               counter.increment(1);
-              updateFunction?.call(counter);
-            },
-          ),
-          const SizedBox(width: 8),
-          RoundIconButton(
-            child: const Text(
-              "+2",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
-            ),
-            onPressed: () {
-              counter.increment(2);
-              updateFunction?.call(counter);
-            },
-          ),
-          const SizedBox(width: 8),
-          RoundIconButton(
-            child: const Text(
-              "+10",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            onPressed: () {
-              counter.increment(10);
               updateFunction?.call(counter);
             },
           ),

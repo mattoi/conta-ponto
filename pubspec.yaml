@@ -1,5 +1,5 @@
 name: conta_ponto
-description: A new Flutter project.
+description: An app to help counting things.
 
 publish_to: 'none' 
 
@@ -24,4 +24,8 @@ dev_dependencies:
 
 
 flutter:
-   uses-material-design: true
+  uses-material-design: true
+  fonts:
+    - family: Roboto
+      fonts: 
+        - asset: fonts/Roboto-Regular.ttf
