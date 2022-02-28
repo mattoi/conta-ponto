@@ -2,6 +2,7 @@ import 'package:conta_ponto/constants.dart';
 import 'package:flutter/material.dart';
 import 'round_button.dart';
 
+///A counter for integer numbers. Cannot go below 0.
 class Counter {
   int index;
   int value = 0;
@@ -15,9 +16,8 @@ class Counter {
   ///Increments the value of the counter by [number].
   ///Decrements if it's negative, but cannot go below 0.
   void increment(int number) {
-    if (value + number >= 0) {
-      value += number;
-    }
+    //Ensures it's not going below 0.
+    if (value + number >= 0) value += number;
   }
 
   ///Sets the counter value to a [number].
@@ -27,10 +27,10 @@ class Counter {
 class CounterTile extends StatelessWidget {
   final Counter counter;
 
-  ///Calls a function to update the numbers on the screen.
+  ///Function to update the numbers on the screen.
   final Function(Counter)? updateFunction;
 
-  ///Calls a function to delete the counter and its tile.
+  ///Function to delete the counter and its tile.
   final Function(int) deleteFunction;
 
   const CounterTile({
@@ -40,9 +40,64 @@ class CounterTile extends StatelessWidget {
     required this.deleteFunction,
   }) : super(key: key);
 
+  //Pretty sure I was told this kind of refactoring is bad, but I can't remember why.
+  //This is easier to edit for now.
+  AlertDialog showSetValueDialog(BuildContext context) {
+    int newValue = counter.value;
+    return AlertDialog(
+      backgroundColor: UIColors.counterTile,
+      title: const Text(
+        UITextStrings.dialogTitleSetCounter,
+        style: UITextStyles.dialogTitle,
+      ),
+      content: TextField(
+        //TODO implement handling bad input values. Currently it doesn't crash, but just ignores them
+        autofocus: true,
+        cursorColor: UIColors.actionButton,
+        decoration: const InputDecoration(
+          hintText: UITextStrings.dialogTextFieldHint,
+          hintStyle: UITextStyles.dialogTextFieldHint,
+          border: OutlineInputBorder(),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: UIColors.actionButton,
+            ),
+          ),
+        ),
+        onChanged: (value) {
+          newValue = int.tryParse(value) ?? newValue;
+        },
+      ),
+      actions: <TextButton>[
+        //Cancel button
+        TextButton(
+          child: const Text(
+            UITextStrings.dialogButtonCancel,
+            style: UITextStyles.dialogButton,
+          ),
+          onPressed: () => Navigator.pop(context, 'Cancel'),
+        ),
+        //OK button
+        TextButton(
+          child: const Text(
+            UITextStrings.dialogButtonOK,
+            style: UITextStyles.dialogButton,
+          ),
+          onPressed: () {
+            if (newValue >= 0) {
+              counter.setValue(newValue);
+              updateFunction?.call(counter);
+            }
+            Navigator.pop(context, 'OK');
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    //TODO fix all of the component sizes, margins and sizedboxes here, layout is a bit weird
+    //TODO fix all of the component sizes, margins and sizedboxes here. Layout is a bit weird
     return Container(
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -50,8 +105,8 @@ class CounterTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          //Button to delete the counter.
           RoundButton(
-            color: UIColors.counterTile,
             child: const Icon(Icons.remove),
             onPressed: () => deleteFunction(counter.index),
           ),
@@ -68,56 +123,12 @@ class CounterTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
+          //Counter value display. Can be tapped to edit value directly.
           InkWell(
             onTap: (() {
-              int newValue = counter.value;
               showDialog(
                 context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  backgroundColor: UIColors.counterTile,
-                  title: const Text(UITextStrings.dialogTitleSetCounter,
-                      style: UITextStyles.dialogTitle),
-                  content: TextField(
-                    //TODO implement handling bad input values. Currently it just ignores them
-                    autofocus: true,
-                    cursorColor: UIColors.actionButton,
-                    decoration: const InputDecoration(
-                      hintText: UITextStrings.dialogTextFieldHint,
-                      hintStyle: UITextStyles.dialogTextFieldHint,
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: UIColors.actionButton,
-                        ),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      newValue = int.tryParse(value) ?? newValue;
-                    },
-                  ),
-                  actions: <TextButton>[
-                    TextButton(
-                      child: const Text(
-                        UITextStrings.dialogButtonCancel,
-                        style: UITextStyles.dialogButton,
-                      ),
-                      onPressed: () => Navigator.pop(context, 'Cancel'),
-                    ),
-                    TextButton(
-                      child: const Text(
-                        UITextStrings.dialogButtonOK,
-                        style: UITextStyles.dialogButton,
-                      ),
-                      onPressed: () {
-                        if (newValue >= 0) {
-                          counter.setValue(newValue);
-                          updateFunction?.call(counter);
-                        }
-                        Navigator.pop(context, 'OK');
-                      },
-                    ),
-                  ],
-                ),
+                builder: (BuildContext context) => showSetValueDialog(context),
               );
             }),
             child: Column(
@@ -135,6 +146,7 @@ class CounterTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
+          //Button to decrement from the counter.
           RoundButton(
             child: const Icon(Icons.remove),
             onPressed: () {
@@ -143,6 +155,7 @@ class CounterTile extends StatelessWidget {
             },
           ),
           const SizedBox(width: 4),
+          //Button to increment from the counter.
           RoundButton(
             child: const Icon(Icons.add),
             onPressed: () {

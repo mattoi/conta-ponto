@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+///The colors used in the app UI.
 abstract class UIColors {
   static const appBar = Color(0xffb00b69);
-  static const appBackground = Color(0xFF0A0E20);
   static const actionButton = Color(0xff69b00b);
+  static const appBackground = Color(0xFF0A0E20);
   static const counterTile = Color(0xFF1D1E30);
   static const labelText = Color(0xFF8D8E98);
   static const roundButton = Color(0xFF4C4F5E);
@@ -15,6 +16,7 @@ final appTheme = ThemeData.dark().copyWith(
   colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.pink),
 );
 
+///The text styles used in the app.
 abstract class UITextStyles {
   static const String _fontFamily = 'Roboto';
 
@@ -57,6 +59,9 @@ abstract class UITextStyles {
   );
 }
 
+///The text strings used in the app.
+///
+///Internationalization is planned, but for now it's all in pt-br.
 abstract class UITextStrings {
   static const String appName = 'Conta Ponto';
   static const String counterLabel = 'PONTO';

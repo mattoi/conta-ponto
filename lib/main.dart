@@ -16,6 +16,7 @@ class ContaPonto extends StatelessWidget {
           '/', //TODO detect between desktop and mobile and load the appropriate screen
       routes: {
         '/': (context) => const MainPageMobile(),
+        //'/desktop': (context) => const MainPageDesktop(),
       },
     );
   }

@@ -73,6 +73,43 @@ class _MainPageMobileState extends State<MainPageMobile> {
     loadFromPrefs();
   }
 
+  //Pretty sure I was told this kind of refactoring is bad, but I can't remember why.
+  //This is easier to edit for now.
+  AlertDialog showDeleteAllDialog(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: UIColors.counterTile,
+      title: const Text(
+        UITextStrings.dialogTitleDeleteAll,
+        style: UITextStyles.dialogTitle,
+      ),
+      content: const Text(
+        UITextStrings.dialogContentDeleteAll,
+        style: UITextStyles.dialogContent,
+      ),
+      actions: [
+        //No button
+        TextButton(
+          child: const Text(
+            UITextStrings.dialogButtonNo,
+            style: UITextStyles.dialogButton,
+          ),
+          onPressed: () => Navigator.pop(context, 'No'),
+        ),
+        //Yes button
+        TextButton(
+          child: const Text(
+            UITextStrings.dialogButtonYes,
+            style: UITextStyles.dialogButton,
+          ),
+          onPressed: () {
+            setState(() => _counterList.clear());
+            Navigator.pop(context, 'Yes');
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,52 +120,23 @@ class _MainPageMobileState extends State<MainPageMobile> {
         ),
         backgroundColor: UIColors.appBar,
         actions: [
+          //Button to delete all counters.
           IconButton(
             onPressed: () => showDialog(
               context: context,
-              builder: (BuildContext context) => AlertDialog(
-                backgroundColor: UIColors.counterTile,
-                title: const Text(
-                  UITextStrings.dialogTitleDeleteAll,
-                  style: UITextStyles.dialogTitle,
-                ),
-                content: const Text(
-                  UITextStrings.dialogContentDeleteAll,
-                  style: UITextStyles.dialogContent,
-                ),
-                actions: [
-                  TextButton(
-                    child: const Text(
-                      UITextStrings.dialogButtonNo,
-                      style: UITextStyles.dialogButton,
-                    ),
-                    onPressed: () => Navigator.pop(context, 'No'),
-                  ),
-                  TextButton(
-                    child: const Text(
-                      UITextStrings.dialogButtonYes,
-                      style: UITextStyles.dialogButton,
-                    ),
-                    onPressed: () {
-                      setState(() => _counterList.clear());
-                      Navigator.pop(context, 'Yes');
-                    },
-                  ),
-                ],
-              ),
+              builder: (BuildContext context) => showDeleteAllDialog(context),
             ),
             icon: const Icon(Icons.delete),
           ),
         ],
       ),
-      floatingActionButton: InkWell(
-        onLongPress: () {},
-        child: FloatingActionButton(
-          child: const Icon(Icons.add),
-          backgroundColor: UIColors.actionButton,
-          onPressed: _addNewCounter,
-        ),
+      //Floating button to add a counter.
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        backgroundColor: UIColors.actionButton,
+        onPressed: _addNewCounter,
       ),
+      //ListView that generates all the tiles for the counters.
       body: ListView.builder(
         shrinkWrap: true,
         itemCount: _counterList.length,
