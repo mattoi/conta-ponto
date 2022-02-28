@@ -10,6 +10,7 @@ class ContaPonto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: UITextStrings.appName,
       theme: appTheme,
       initialRoute:
           '/', //TODO detect between desktop and mobile and load the appropriate screen

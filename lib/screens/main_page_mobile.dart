@@ -78,7 +78,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          UITextStrings.appBarTitle,
+          UITextStrings.appName,
           style: UITextStyles.appBar,
         ),
         backgroundColor: UIColors.appBar,

@@ -54,3 +54,5 @@ firebase.json
 /android
 /ios 
 /windows 
+
+/test

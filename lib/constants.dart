@@ -58,11 +58,11 @@ abstract class UITextStyles {
 }
 
 abstract class UITextStrings {
-  static const String appBarTitle = 'Conta Ponto';
+  static const String appName = 'Conta Ponto';
   static const String counterLabel = 'PONTO';
   static const String dialogTitleDeleteAll = 'Apagar tudo';
   static const String dialogContentDeleteAll =
-      'Tem certeza de que deseja apagar todas as camadas?';
+      'Você tem certeza de que deseja apagar todas as camadas?';
   static const String dialogTitleSetCounter = 'Modificar valor';
   static const String dialogTextFieldHint = 'Digite aqui o valor';
   static const String dialogButtonYes = 'Sim';
