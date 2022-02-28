@@ -1,6 +1,6 @@
 # Conta Ponto
 
-[Screenshot 1](assets/screenshots/ss01.jpg)
+![Screenshot 1](assets/screenshots/ss01.jpg)
 
 This is an app I made as a tool for my girlfriend. She works with crochets, and as such she could use a counter that can keep track of a number of layers and the knots in each layer. 
 
