@@ -4,7 +4,5 @@ You can add new layers or remove existing ones, and add to each counter. The dat
 I made this as a web app, but it can be built as an Android, iOS ow Windows app, thanks to Flutter.
 
 TODO: 
-- Add a way to set the counter to a specific number 
-- Add a button to delete all counters 
 - Refactor pretty much all the widgets and theme data 
 - Implement layout for desktops

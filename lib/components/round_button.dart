@@ -1,17 +1,17 @@
+import 'package:conta_ponto/constants.dart';
 import 'package:flutter/material.dart';
 
-class RoundIconButton extends StatelessWidget {
+class RoundButton extends StatelessWidget {
   final double size;
   final Color color;
-  final Widget child;
+  final Widget? child;
   final Function() onPressed;
-  static const defaultColor = Color(0xFF4C4F5E);
 
-  const RoundIconButton({
+  const RoundButton({
     Key? key,
-    this.size = 48.0,
-    this.color = defaultColor,
-    required this.child,
+    this.size = 40.0,
+    this.color = UIColors.roundButton,
+    this.child,
     required this.onPressed,
   }) : super(key: key);
 

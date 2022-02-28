@@ -1,93 +1,149 @@
 import 'package:conta_ponto/constants.dart';
 import 'package:flutter/material.dart';
 import 'round_button.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-//TODO maybe add a button to enter custom number (via a popup)
 
 class Counter {
   int index;
   int value = 0;
 
-  Counter(this.index, {this.value = 0});
+  ///Create a counter that starts at 0 and receives an [index] to be displayed.
+  Counter({required this.index});
 
-  Counter.withValue(this.index, {this.value = 0});
+  ///Creates a counter that starts at [value] and receives an [index] to be displayed.
+  Counter.withValue({required this.index, required this.value});
 
-  void decrement(int a) {
-    if (value > 0) value -= a;
+  ///Increments the value of the counter by [number].
+  ///Decrements if it's negative, but cannot go below 0.
+  void increment(int number) {
+    if (value + number >= 0) {
+      value += number;
+    }
   }
 
-  void increment(int a) => value += a;
+  ///Sets the counter value to a [number].
+  void setValue(int? number) => value = number ?? value;
 }
 
 class CounterTile extends StatelessWidget {
-  final Color color;
   final Counter counter;
+
+  ///Calls a function to update the numbers on the screen.
   final Function(Counter)? updateFunction;
+
+  ///Calls a function to delete the counter and its tile.
   final Function(int) deleteFunction;
 
   const CounterTile({
+    Key? key,
     required this.counter,
-    required this.color,
     required this.updateFunction,
     required this.deleteFunction,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    //TODO fix all of the component sizes, margins and sizedboxes here, layout is a bit weird
     return Container(
       margin: const EdgeInsets.all(8),
-      decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: UIColors.counterTile, borderRadius: BorderRadius.circular(10)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          RoundIconButton(
-            // delete counter button
-            color: Color(0xFF0A0E20),
-            child: const Icon(FontAwesomeIcons.minus),
-            onPressed: () {
-              return deleteFunction(counter.index);
-            },
+          RoundButton(
+            color: UIColors.counterTile,
+            child: const Icon(Icons.remove),
+            onPressed: () => deleteFunction(counter.index),
           ),
+          //Container with the index number. Displayed index starts at 1.
           Container(
-            //index number
-            width: 100,
+            width: 80,
             height: 94,
             alignment: Alignment.centerRight,
             child: Text(
               (counter.index + 1).toString(),
               style: (counter.index < 99
-                  ? UITextStyles.index
-                  : UITextStyles.index.copyWith(fontSize: 58)),
+                  ? UITextStyles.indexNumber
+                  : UITextStyles.indexNumber.copyWith(fontSize: 52)),
             ),
           ),
-          const SizedBox(width: 24),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'PONTO',
-                style: UITextStyles.label,
-              ),
-              Text(
-                counter.value.toString(),
-                style: UITextStyles.number,
-              ),
-            ],
-          ),
           const SizedBox(width: 16),
-          RoundIconButton(
-            child: const Icon(FontAwesomeIcons.minus),
-            onPressed: () {
-              counter.decrement(1);
-              updateFunction?.call(counter);
-              // TODO maybe refactor these round buttons into something more concise
-            },
+          InkWell(
+            onTap: (() {
+              int newValue = counter.value;
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  backgroundColor: UIColors.counterTile,
+                  title: const Text(UITextStrings.dialogTitleSetCounter,
+                      style: UITextStyles.dialogTitle),
+                  content: TextField(
+                    autofocus: true,
+                    cursorColor: UIColors.actionButton,
+                    decoration: const InputDecoration(
+                      hintText: UITextStrings.dialogTextFieldHint,
+                      hintStyle: UITextStyles.dialogTextFieldHint,
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: UIColors.actionButton,
+                        ),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      newValue = int.tryParse(value) ?? newValue;
+                    },
+                  ),
+                  actions: <TextButton>[
+                    TextButton(
+                      child: const Text(
+                        UITextStrings.dialogButtonCancel,
+                        style: UITextStyles.dialogButton,
+                      ),
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                    ),
+                    TextButton(
+                      child: const Text(
+                        UITextStrings.dialogButtonOK,
+                        style: UITextStyles.dialogButton,
+                      ),
+                      onPressed: () {
+                        if (newValue >= 0) {
+                          counter.setValue(newValue);
+                          updateFunction?.call(counter);
+                        }
+                        Navigator.pop(context, 'OK');
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  UITextStrings.counterLabel,
+                  style: UITextStyles.label,
+                ),
+                Text(
+                  counter.value.toString(),
+                  style: UITextStyles.counterValue,
+                ),
+              ],
+            ),
           ),
           const SizedBox(width: 8),
-          RoundIconButton(
-            child: const Icon(FontAwesomeIcons.plus),
+          RoundButton(
+            child: const Icon(Icons.remove),
+            onPressed: () {
+              counter.increment(-1);
+              updateFunction?.call(counter);
+            },
+          ),
+          const SizedBox(width: 4),
+          RoundButton(
+            child: const Icon(Icons.add),
             onPressed: () {
               counter.increment(1);
               updateFunction?.call(counter);

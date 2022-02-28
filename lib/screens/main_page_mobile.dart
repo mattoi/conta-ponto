@@ -3,7 +3,6 @@ import 'package:conta_ponto/constants.dart';
 import 'package:conta_ponto/components/value_counter_tile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//TODO button to delete all tiles (floating?)
 class MainPageMobile extends StatefulWidget {
   const MainPageMobile({Key? key}) : super(key: key);
 
@@ -15,32 +14,37 @@ class _MainPageMobileState extends State<MainPageMobile> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final List<Counter> _counterList = [];
 
+  ///Loads the list of saved counters, if any, from shared preferences.
   void loadFromPrefs() async {
     final prefs = await _prefs;
-    final List<String>? items = prefs.getStringList('items');
-    if (items != null) {
-      for (int i = 0; i < items.length; i++) {
+    final List<String>? list = prefs.getStringList('counter_list');
+    if (list != null) {
+      for (int i = 0; i < list.length; i++) {
         setState(() {
-          _counterList.add(Counter.withValue(i, value: int.parse(items[i])));
+          _counterList
+              .add(Counter.withValue(index: i, value: int.parse(list[i])));
         });
       }
     }
   }
 
+  ///Saves all counters as a list into shared preferences.
   void saveToPrefs() async {
     final prefs = await _prefs;
-    List<String> stringList = [];
+    List<String> list = [];
     for (var i = 0; i < _counterList.length; i++) {
-      stringList.add(_counterList[i].value.toString());
+      list.add(_counterList[i].value.toString());
     }
-    prefs.setStringList('items', stringList);
+    prefs.setStringList('counter_list', list);
   }
 
+  ///Adds a new counter at the end of the list.
   void _addNewCounter() {
-    setState(() => _counterList.add(Counter(_counterList.length)));
+    setState(() => _counterList.add(Counter(index: _counterList.length)));
     saveToPrefs();
   }
 
+  ///Deletes a counter at [index] and its tile from the list, updating all subsequent indexes accordingly.
   void _deleteCounter(int index) {
     if (index < _counterList.length) {
       setState(() {
@@ -53,6 +57,9 @@ class _MainPageMobileState extends State<MainPageMobile> {
     }
   }
 
+  ///Calls setState to redraw the values on screen and saves into shared preferences.
+  // Honestly I don't know who implemented it like this or whether it's
+  // optimal or not, but it works.
   void _updateCounter(Counter counter) {
     setState(() {
       _counterList[counter.index] = counter;
@@ -70,22 +77,62 @@ class _MainPageMobileState extends State<MainPageMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conta Ponto',
-            style: TextStyle(
-              fontFamily: 'Roboto',
-            )),
+        title: const Text(
+          UITextStrings.appBarTitle,
+          style: UITextStyles.appBar,
+        ),
         backgroundColor: UIColors.appBar,
+        actions: [
+          IconButton(
+            onPressed: () => showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                backgroundColor: UIColors.counterTile,
+                title: const Text(
+                  UITextStrings.dialogTitleDeleteAll,
+                  style: UITextStyles.dialogTitle,
+                ),
+                content: const Text(
+                  UITextStrings.dialogContentDeleteAll,
+                  style: UITextStyles.dialogContent,
+                ),
+                actions: [
+                  TextButton(
+                    child: const Text(
+                      UITextStrings.dialogButtonNo,
+                      style: UITextStyles.dialogButton,
+                    ),
+                    onPressed: () => Navigator.pop(context, 'No'),
+                  ),
+                  TextButton(
+                    child: const Text(
+                      UITextStrings.dialogButtonYes,
+                      style: UITextStyles.dialogButton,
+                    ),
+                    onPressed: () {
+                      setState(() => _counterList.clear());
+                      Navigator.pop(context, 'Yes');
+                    },
+                  ),
+                ],
+              ),
+            ),
+            icon: const Icon(Icons.delete),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        backgroundColor: UIColors.actionButton,
-        onPressed: _addNewCounter,
+      floatingActionButton: InkWell(
+        onLongPress: () {},
+        child: FloatingActionButton(
+          child: const Icon(Icons.add),
+          backgroundColor: UIColors.actionButton,
+          onPressed: _addNewCounter,
+        ),
       ),
       body: ListView.builder(
         shrinkWrap: true,
         itemCount: _counterList.length,
         itemBuilder: (BuildContext context, int index) => CounterTile(
-          color: UIColors.tile,
           counter: _counterList[index],
           updateFunction: _updateCounter,
           deleteFunction: _deleteCounter,

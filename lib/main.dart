@@ -1,3 +1,4 @@
+import 'package:conta_ponto/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:conta_ponto/screens/main_page_mobile.dart';
 
@@ -9,12 +10,7 @@ class ContaPonto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark().copyWith(
-        primaryColor: const Color(0xFF0A0E20),
-        scaffoldBackgroundColor: const Color(0xFF0A0E20),
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.pink),
-        //TODO extract this into a theme file?
-      ),
+      theme: appTheme,
       initialRoute:
           '/', //TODO detect between desktop and mobile and load the appropriate screen
       routes: {
