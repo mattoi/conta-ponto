@@ -1,11 +1,11 @@
 {
-    "name": "conta_ponto",
-    "short_name": "conta_ponto",
+    "name": "Conta Ponto",
+    "short_name": "Conta Ponto",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Um plicativo web para ajudar a contar.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

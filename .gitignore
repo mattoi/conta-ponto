@@ -50,3 +50,7 @@ app.*.map.json
 .firebaserc
 firebase.json 
 
+# Config files for unintended platforms
+/android
+/ios 
+/windows 

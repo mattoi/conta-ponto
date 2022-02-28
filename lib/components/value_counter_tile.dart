@@ -78,6 +78,7 @@ class CounterTile extends StatelessWidget {
                   title: const Text(UITextStrings.dialogTitleSetCounter,
                       style: UITextStyles.dialogTitle),
                   content: TextField(
+                    //TODO implement handling bad input values. Currently it just ignores them
                     autofocus: true,
                     cursorColor: UIColors.actionButton,
                     decoration: const InputDecoration(
