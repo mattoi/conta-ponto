@@ -40,9 +40,6 @@ class CounterTile extends StatelessWidget {
     required this.deleteFunction,
   }) : super(key: key);
 
-  //Pretty sure I was told this kind of refactoring is bad, but I can't remember why.
-  //This is easier to edit for now.
-
   @override
   Widget build(BuildContext context) {
     //TODO fix all of the component sizes, margins and sizedboxes here. Layout is a bit weird
