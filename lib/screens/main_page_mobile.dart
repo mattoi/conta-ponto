@@ -73,43 +73,6 @@ class _MainPageMobileState extends State<MainPageMobile> {
     loadFromPrefs();
   }
 
-  //Pretty sure I was told this kind of refactoring is bad, but I can't remember why.
-  //This is easier to edit for now.
-  AlertDialog showDeleteAllDialog(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: UIColors.counterTile,
-      title: const Text(
-        UITextStrings.dialogTitleDeleteAll,
-        style: UITextStyles.dialogTitle,
-      ),
-      content: const Text(
-        UITextStrings.dialogContentDeleteAll,
-        style: UITextStyles.dialogContent,
-      ),
-      actions: [
-        //No button
-        TextButton(
-          child: const Text(
-            UITextStrings.dialogButtonNo,
-            style: UITextStyles.dialogButton,
-          ),
-          onPressed: () => Navigator.pop(context, 'No'),
-        ),
-        //Yes button
-        TextButton(
-          child: const Text(
-            UITextStrings.dialogButtonYes,
-            style: UITextStyles.dialogButton,
-          ),
-          onPressed: () {
-            setState(() => _counterList.clear());
-            Navigator.pop(context, 'Yes');
-          },
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +87,38 @@ class _MainPageMobileState extends State<MainPageMobile> {
           IconButton(
             onPressed: () => showDialog(
               context: context,
-              builder: (BuildContext context) => showDeleteAllDialog(context),
+              builder: (BuildContext context) => AlertDialog(
+                backgroundColor: UIColors.counterTile,
+                title: const Text(
+                  UITextStrings.dialogTitleDeleteAll,
+                  style: UITextStyles.dialogTitle,
+                ),
+                content: const Text(
+                  UITextStrings.dialogContentDeleteAll,
+                  style: UITextStyles.dialogContent,
+                ),
+                actions: [
+                  //No button
+                  TextButton(
+                    child: const Text(
+                      UITextStrings.dialogButtonNo,
+                      style: UITextStyles.dialogButton,
+                    ),
+                    onPressed: () => Navigator.pop(context, 'No'),
+                  ),
+                  //Yes button
+                  TextButton(
+                    child: const Text(
+                      UITextStrings.dialogButtonYes,
+                      style: UITextStyles.dialogButton,
+                    ),
+                    onPressed: () {
+                      setState(() => _counterList.clear());
+                      Navigator.pop(context, 'Yes');
+                    },
+                  ),
+                ],
+              ),
             ),
             icon: const Icon(Icons.delete),
           ),
