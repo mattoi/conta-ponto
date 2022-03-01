@@ -42,58 +42,6 @@ class CounterTile extends StatelessWidget {
 
   //Pretty sure I was told this kind of refactoring is bad, but I can't remember why.
   //This is easier to edit for now.
-  AlertDialog showSetValueDialog(BuildContext context) {
-    int newValue = counter.value;
-    return AlertDialog(
-      backgroundColor: UIColors.counterTile,
-      title: const Text(
-        UITextStrings.dialogTitleSetCounter,
-        style: UITextStyles.dialogTitle,
-      ),
-      content: TextField(
-        //TODO implement handling bad input values. Currently it doesn't crash, but just ignores them
-        autofocus: true,
-        cursorColor: UIColors.actionButton,
-        decoration: const InputDecoration(
-          hintText: UITextStrings.dialogTextFieldHint,
-          hintStyle: UITextStyles.dialogTextFieldHint,
-          border: OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: UIColors.actionButton,
-            ),
-          ),
-        ),
-        onChanged: (value) {
-          newValue = int.tryParse(value) ?? newValue;
-        },
-      ),
-      actions: <TextButton>[
-        //Cancel button
-        TextButton(
-          child: const Text(
-            UITextStrings.dialogButtonCancel,
-            style: UITextStyles.dialogButton,
-          ),
-          onPressed: () => Navigator.pop(context, 'Cancel'),
-        ),
-        //OK button
-        TextButton(
-          child: const Text(
-            UITextStrings.dialogButtonOK,
-            style: UITextStyles.dialogButton,
-          ),
-          onPressed: () {
-            if (newValue >= 0) {
-              counter.setValue(newValue);
-              updateFunction?.call(counter);
-            }
-            Navigator.pop(context, 'OK');
-          },
-        ),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,9 +74,58 @@ class CounterTile extends StatelessWidget {
           //Counter value display. Can be tapped to edit value directly.
           InkWell(
             onTap: (() {
+              int newValue = counter.value;
               showDialog(
                 context: context,
-                builder: (BuildContext context) => showSetValueDialog(context),
+                builder: (BuildContext context) => AlertDialog(
+                  backgroundColor: UIColors.counterTile,
+                  title: const Text(
+                    UITextStrings.dialogTitleSetCounter,
+                    style: UITextStyles.dialogTitle,
+                  ),
+                  content: TextField(
+                    //TODO implement handling bad input values. Currently it doesn't crash, but just ignores them
+                    autofocus: true,
+                    cursorColor: UIColors.actionButton,
+                    decoration: const InputDecoration(
+                      hintText: UITextStrings.dialogTextFieldHint,
+                      hintStyle: UITextStyles.dialogTextFieldHint,
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: UIColors.actionButton,
+                        ),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      newValue = int.tryParse(value) ?? newValue;
+                    },
+                  ),
+                  actions: <TextButton>[
+                    //Cancel button
+                    TextButton(
+                      child: const Text(
+                        UITextStrings.dialogButtonCancel,
+                        style: UITextStyles.dialogButton,
+                      ),
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                    ),
+                    //OK button
+                    TextButton(
+                      child: const Text(
+                        UITextStrings.dialogButtonOK,
+                        style: UITextStyles.dialogButton,
+                      ),
+                      onPressed: () {
+                        if (newValue >= 0) {
+                          counter.setValue(newValue);
+                          updateFunction?.call(counter);
+                        }
+                        Navigator.pop(context, 'OK');
+                      },
+                    ),
+                  ],
+                ),
               );
             }),
             child: Column(
