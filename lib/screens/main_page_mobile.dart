@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:conta_ponto/constants.dart';
 import 'package:conta_ponto/components/counter_tile.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPageMobile extends StatefulWidget {
@@ -72,11 +73,10 @@ class _MainPageMobileState extends State<MainPageMobile> {
   }
 
   ///Calls setState to redraw the values on screen and saves them into shared preferences.
-  // Honestly I don't know who implemented it like this or whether it's
+  // Honestly I can't remember who implemented it like this or whether it's
   // optimal or not, but it works.
   void _updateCounter() {
     setState(() {
-      //_counterList[counter.index] = counter;
       saveToPrefs();
     });
   }
@@ -143,11 +143,77 @@ class _MainPageMobileState extends State<MainPageMobile> {
           ),
         ],
       ),
-      //Floating button to add a counter.
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        backgroundColor: UIColors.actionButton,
-        onPressed: _addNewCounter,
+      //Floating button to add a counter. Can be held to add an [amount] of counters.
+      floatingActionButton: InkWell(
+        child: FloatingActionButton(
+          child: const Icon(Icons.add),
+          backgroundColor: UIColors.actionButton,
+          onPressed: _addNewCounter,
+        ),
+        onLongPress: () {
+          int amount = -1;
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => StatefulBuilder(
+              builder: (context, setState) => AlertDialog(
+                backgroundColor: UIColors.counterTile,
+                title: const Text(
+                  UITextStrings.dialogTitleAddMultiple,
+                  style: UITextStyles.dialogTitle,
+                ),
+                //This TextField only accepts number input
+                content: TextField(
+                  autofocus: true,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  keyboardType: TextInputType.number,
+                  cursorColor: UIColors.actionButton,
+                  decoration: const InputDecoration(
+                    hintText: UITextStrings.addMultipleHintText,
+                    hintStyle: UITextStyles.dialogTextFieldHint,
+                    border: OutlineInputBorder(),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: UIColors.actionButton,
+                      ),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      amount = int.tryParse(value) ?? -1;
+                      if (amount + _counterList.length > 999) amount = -1;
+                    });
+                  },
+                ),
+                actions: <TextButton>[
+                  //"Cancel" button
+                  TextButton(
+                    child: const Text(
+                      UITextStrings.dialogButtonCancel,
+                      style: UITextStyles.dialogButton,
+                    ),
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                  ),
+                  //"OK" button, only available if value entered is a number >= 0
+                  TextButton(
+                    child: Text(
+                      UITextStrings.dialogButtonOK,
+                      style: amount >= 1
+                          ? UITextStyles.dialogButton
+                          : UITextStyles.dialogButton
+                              .copyWith(color: UIColors.labelText),
+                    ),
+                    onPressed: amount >= 1
+                        ? () {
+                            _addMultipleCounters(amount);
+                            Navigator.pop(context, 'OK');
+                          }
+                        : null,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
       //ListView that generates all the tiles for the counters.
       body: ListView.builder(
