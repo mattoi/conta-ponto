@@ -38,10 +38,24 @@ class _MainPageMobileState extends State<MainPageMobile> {
     prefs.setStringList('counter_list', list);
   }
 
-  ///Adds a new counter at the end of the list.
+  ///Adds a new counter at the end of the list. Can't have more than 999 counters.
   void _addNewCounter() {
-    setState(() => _counterList.add(Counter(index: _counterList.length)));
-    saveToPrefs();
+    if (_counterList.length < 999) {
+      setState(() => _counterList.add(Counter(index: _counterList.length)));
+      saveToPrefs();
+    }
+  }
+
+  ///Adds an [amount] of new counters at the end of the list. Can't have more than 999 counters.
+  void _addMultipleCounters(int amount) {
+    if (_counterList.length + amount <= 999) {
+      setState(() {
+        for (int i = 0; i < amount; i++) {
+          _counterList.add(Counter(index: _counterList.length));
+        }
+      });
+      saveToPrefs();
+    }
   }
 
   ///Deletes a counter at [index] and its tile from the list, updating all subsequent indexes accordingly.
