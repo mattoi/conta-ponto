@@ -3,8 +3,6 @@ description: An app to help counting things.
 
 publish_to: 'none' 
 
-platforms: web
-
 version: 1.0.0+1
 
 environment:
