@@ -85,6 +85,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
         actions: [
           //Button to delete all counters.
           IconButton(
+            icon: const Icon(Icons.delete),
             onPressed: () => showDialog(
               context: context,
               builder: (BuildContext context) => AlertDialog(
@@ -120,7 +121,6 @@ class _MainPageMobileState extends State<MainPageMobile> {
                 ],
               ),
             ),
-            icon: const Icon(Icons.delete),
           ),
         ],
       ),
@@ -132,6 +132,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
       ),
       //ListView that generates all the tiles for the counters.
       body: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 80),
         shrinkWrap: true,
         itemCount: _counterList.length,
         itemBuilder: (BuildContext context, int index) => CounterTile(
@@ -139,7 +140,6 @@ class _MainPageMobileState extends State<MainPageMobile> {
           updateFunction: _updateCounter,
           deleteFunction: _deleteCounter,
         ),
-        padding: const EdgeInsets.only(bottom: 80),
       ),
     );
   }
