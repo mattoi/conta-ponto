@@ -18,7 +18,7 @@ class Counter {
   ///Decrements if it's negative, but cannot go below 0.
   void increment(int number) {
     //Ensures it's not going below 0.
-    if (value + number >= 0) value += number;
+    if (value + number >= 0 && value + number < 1000) value += number;
   }
 
   ///Sets the counter value to a [newValue].
@@ -101,7 +101,8 @@ class CounterTile extends StatelessWidget {
               ),
             ),
             onTap: (() {
-              int? newValue;
+              //-1 is used if an invalid number is entered.  it's used instead of null for comparison purposes
+              int newValue = -1;
               showDialog(
                 context: context,
                 builder: (BuildContext context) => StatefulBuilder(
@@ -128,7 +129,10 @@ class CounterTile extends StatelessWidget {
                         ),
                       ),
                       onChanged: (value) {
-                        setState(() => newValue = int.tryParse(value));
+                        setState(() {
+                          newValue = int.tryParse(value) ?? -1;
+                          if (newValue > 999) newValue = -1;
+                        });
                       },
                     ),
                     actions: <TextButton>[
@@ -144,14 +148,14 @@ class CounterTile extends StatelessWidget {
                       TextButton(
                         child: Text(
                           UITextStrings.dialogButtonOK,
-                          style: newValue != null
+                          style: newValue >= 0
                               ? UITextStyles.dialogButton
                               : UITextStyles.dialogButton
                                   .copyWith(color: UIColors.labelText),
                         ),
-                        onPressed: newValue != null
+                        onPressed: newValue >= 0
                             ? () {
-                                counter.setValue(newValue ?? counter.value);
+                                counter.setValue(newValue);
                                 updateFunction.call();
                                 Navigator.pop(context, 'OK');
                               }

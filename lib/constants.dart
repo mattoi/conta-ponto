@@ -75,4 +75,5 @@ abstract class UITextStrings {
   static const String dialogButtonNo = 'Não';
   static const String dialogButtonOK = 'OK';
   static const String dialogButtonCancel = 'Cancelar';
+  static const String emptyListSnackBar = "A lista já está vazia!";
 }

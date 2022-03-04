@@ -86,41 +86,46 @@ class _MainPageMobileState extends State<MainPageMobile> {
           //Button to delete all counters.
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                backgroundColor: UIColors.counterTile,
-                title: const Text(
-                  UITextStrings.dialogTitleDeleteAll,
-                  style: UITextStyles.dialogTitle,
-                ),
-                content: const Text(
-                  UITextStrings.dialogContentDeleteAll,
-                  style: UITextStyles.dialogContent,
-                ),
-                actions: [
-                  //"No" button
-                  TextButton(
-                    child: const Text(
-                      UITextStrings.dialogButtonNo,
-                      style: UITextStyles.dialogButton,
-                    ),
-                    onPressed: () => Navigator.pop(context, 'No'),
-                  ),
-                  //"Yes" button
-                  TextButton(
-                    child: const Text(
-                      UITextStrings.dialogButtonYes,
-                      style: UITextStyles.dialogButton,
-                    ),
-                    onPressed: () {
-                      setState(() => _counterList.clear());
-                      Navigator.pop(context, 'Yes');
-                    },
-                  ),
-                ],
-              ),
-            ),
+            onPressed: () {
+              _counterList.isNotEmpty
+                  ? showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        backgroundColor: UIColors.counterTile,
+                        title: const Text(
+                          UITextStrings.dialogTitleDeleteAll,
+                          style: UITextStyles.dialogTitle,
+                        ),
+                        content: const Text(
+                          UITextStrings.dialogContentDeleteAll,
+                          style: UITextStyles.dialogContent,
+                        ),
+                        actions: [
+                          //"No" button
+                          TextButton(
+                            child: const Text(
+                              UITextStrings.dialogButtonNo,
+                              style: UITextStyles.dialogButton,
+                            ),
+                            onPressed: () => Navigator.pop(context, 'No'),
+                          ),
+                          //"Yes" button
+                          TextButton(
+                            child: const Text(
+                              UITextStrings.dialogButtonYes,
+                              style: UITextStyles.dialogButton,
+                            ),
+                            onPressed: () {
+                              setState(() => _counterList.clear());
+                              Navigator.pop(context, 'Yes');
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  : ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(UITextStrings.emptyListSnackBar)));
+            },
           ),
         ],
       ),
