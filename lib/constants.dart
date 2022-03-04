@@ -69,8 +69,8 @@ abstract class UITextStrings {
   static const String dialogTitleDeleteAll = 'Apagar tudo';
   static const String dialogContentDeleteAll =
       'Você tem certeza de que deseja apagar todas as camadas?';
-  static const String dialogTitleSetCounter = 'Modificar valor';
-  static const String dialogTextFieldHint = 'Digite aqui...';
+  static const String dialogTitleSetCounter = 'Alterar valor';
+  static const String dialogTextFieldHint = 'Deve estar entre 0 e 999...';
   static const String dialogButtonYes = 'Sim';
   static const String dialogButtonNo = 'Não';
   static const String dialogButtonOK = 'OK';

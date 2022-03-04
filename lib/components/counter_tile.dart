@@ -118,11 +118,11 @@ class CounterTile extends StatelessWidget {
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       keyboardType: TextInputType.number,
                       cursorColor: UIColors.actionButton,
-                      decoration: const InputDecoration(
-                        hintText: UITextStrings.dialogTextFieldHint,
+                      decoration: InputDecoration(
+                        hintText: counter.value.toString(),
                         hintStyle: UITextStyles.dialogTextFieldHint,
-                        border: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(
+                        border: const OutlineInputBorder(),
+                        focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
                             color: UIColors.actionButton,
                           ),
