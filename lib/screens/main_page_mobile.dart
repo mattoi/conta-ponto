@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:conta_ponto/constants.dart';
-import 'package:conta_ponto/components/value_counter_tile.dart';
+import 'package:conta_ponto/components/counter_tile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPageMobile extends StatefulWidget {
@@ -57,12 +57,12 @@ class _MainPageMobileState extends State<MainPageMobile> {
     }
   }
 
-  ///Calls setState to redraw the values on screen and saves into shared preferences.
+  ///Calls setState to redraw the values on screen and saves them into shared preferences.
   // Honestly I don't know who implemented it like this or whether it's
   // optimal or not, but it works.
-  void _updateCounter(Counter counter) {
+  void _updateCounter() {
     setState(() {
-      _counterList[counter.index] = counter;
+      //_counterList[counter.index] = counter;
       saveToPrefs();
     });
   }
@@ -99,7 +99,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
                   style: UITextStyles.dialogContent,
                 ),
                 actions: [
-                  //No button
+                  //"No" button
                   TextButton(
                     child: const Text(
                       UITextStrings.dialogButtonNo,
@@ -107,7 +107,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
                     ),
                     onPressed: () => Navigator.pop(context, 'No'),
                   ),
-                  //Yes button
+                  //"Yes" button
                   TextButton(
                     child: const Text(
                       UITextStrings.dialogButtonYes,

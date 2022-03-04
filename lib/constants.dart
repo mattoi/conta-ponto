@@ -25,17 +25,18 @@ abstract class UITextStyles {
   );
   static const indexNumber = TextStyle(
     fontFamily: _fontFamily,
+    //fontWeight: FontWeight.w900,
     fontSize: 64,
   );
   static const label = TextStyle(
     fontFamily: _fontFamily,
-    fontSize: 18,
+    fontSize: 16,
     color: UIColors.labelText,
   );
   static const counterValue = TextStyle(
     fontFamily: _fontFamily,
     fontWeight: FontWeight.w900,
-    fontSize: 50,
+    fontSize: 40,
   );
 
   static const roundButton = TextStyle(
