@@ -7,14 +7,16 @@ class RoundButton extends StatelessWidget {
   final Color color;
   final Widget? child;
   final Function()? onPressed;
+  final Function()? onLongPress;
 
-  ///Creates a round button. Accepts a custom [size] and [color], an optional [child] and a [onPressed] function.
+  ///Creates a round button. Accepts a custom [size] and [color], an optional [child], [onPressed] and [onLongPress] functions.
   const RoundButton({
     Key? key,
     this.size = 40.0,
     this.color = UIColors.roundButton,
     this.child,
     this.onPressed,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class RoundButton extends StatelessWidget {
       fillColor: color,
       child: child,
       onPressed: onPressed,
+      onLongPress: onLongPress,
     );
   }
 }
