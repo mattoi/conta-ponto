@@ -14,6 +14,7 @@ class MainPageMobile extends StatefulWidget {
 class _MainPageMobileState extends State<MainPageMobile> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final List<Counter> _counterList = [];
+  final _controller = ScrollController();
 
   ///Loads the list of saved counters, if any, from shared preferences.
   void loadFromPrefs() async {
@@ -44,6 +45,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
     if (_counterList.length < 999) {
       setState(() => _counterList.add(Counter(index: _counterList.length)));
       saveToPrefs();
+      _scrollDown();
     }
   }
 
@@ -56,7 +58,17 @@ class _MainPageMobileState extends State<MainPageMobile> {
         }
       });
       saveToPrefs();
+      _scrollDown();
     }
+  }
+
+  ///Scrolls down the view, with an animation, to the last element. Usually called when a new counter is added.
+  void _scrollDown() {
+    _controller.animateTo(
+      _controller.position.maxScrollExtent + 106,
+      duration: const Duration(seconds: 1, milliseconds: 500),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   ///Deletes a counter at [index] and its tile from the list, updating all subsequent indexes accordingly.
@@ -220,6 +232,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
         padding: const EdgeInsets.only(bottom: 80),
         shrinkWrap: true,
         itemCount: _counterList.length,
+        controller: _controller,
         itemBuilder: (BuildContext context, int index) => CounterTile(
           counter: _counterList[index],
           updateFunction: _updateCounter,

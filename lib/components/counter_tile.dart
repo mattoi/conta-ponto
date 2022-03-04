@@ -45,7 +45,7 @@ class CounterTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(8),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
           color: UIColors.counterTile, borderRadius: BorderRadius.circular(10)),
       child: Row(
