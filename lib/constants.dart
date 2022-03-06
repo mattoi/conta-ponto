@@ -10,55 +10,79 @@ abstract class UIColors {
   static const roundButton = Color(0xFF4C4F5E);
 }
 
+final colorScheme = const ColorScheme.dark().copyWith(
+  background: const Color(0xFF0A0E20),
+  primary: const Color(0xffb00b69),
+  secondary: const Color(0xff69b00b),
+);
+
 final appTheme = ThemeData.dark().copyWith(
   primaryColor: UIColors.appBackground,
   scaffoldBackgroundColor: UIColors.appBackground,
-  colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.pink),
+  //colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.pink),
+  appBarTheme: const AppBarTheme(
+    color: UIColors.appBar,
+    titleTextStyle: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 20,
+    ),
+  ),
+  iconTheme: const IconThemeData(color: Colors.white),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: UIColors.actionButton,
+  ),
+  dialogTheme: const DialogTheme(
+    backgroundColor: UIColors.counterTile,
+    titleTextStyle: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 20,
+    ),
+    contentTextStyle: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 16,
+    ),
+  ),
+  textTheme: const TextTheme(
+    // 1- and 2-digit index number
+    displayLarge: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 64,
+    ),
+    // 3-digit index number
+    displayMedium: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 38,
+      fontWeight: FontWeight.w900,
+    ),
+    // Counter label
+    labelMedium: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 16,
+      color: UIColors.labelText,
+    ),
+    // Counter value
+    headlineLarge: TextStyle(
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w900,
+      fontSize: 40,
+    ),
+    // AppBar title, dialog title
+    titleSmall: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 20,
+    ),
+    // Dialog text, hint text
+    bodyMedium: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 16,
+    ),
+    // Dialog button
+    bodySmall: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 14,
+    ),
+  ),
 );
-
-///The text styles used in the app.
-abstract class UITextStyles {
-  static const String _fontFamily = 'Roboto';
-
-  static const appBar = TextStyle(
-    fontFamily: _fontFamily,
-  );
-  static const indexNumber = TextStyle(
-    fontFamily: _fontFamily,
-    //fontWeight: FontWeight.w900,
-    fontSize: 64,
-  );
-  static const label = TextStyle(
-    fontFamily: _fontFamily,
-    fontSize: 16,
-    color: UIColors.labelText,
-  );
-  static const counterValue = TextStyle(
-    fontFamily: _fontFamily,
-    fontWeight: FontWeight.w900,
-    fontSize: 40,
-  );
-
-  static const roundButton = TextStyle(
-    fontFamily: _fontFamily,
-    fontWeight: FontWeight.bold,
-    fontSize: 24,
-  );
-  static const dialogTitle = TextStyle(
-    fontFamily: _fontFamily,
-  );
-  static const dialogContent = TextStyle(
-    fontFamily: _fontFamily,
-  );
-  static const dialogTextFieldHint = TextStyle(
-    fontFamily: _fontFamily,
-    color: UIColors.labelText,
-  );
-  static const dialogButton = TextStyle(
-    fontFamily: _fontFamily,
-    color: UIColors.actionButton,
-  );
-}
 
 ///The text strings used in the app.
 ///

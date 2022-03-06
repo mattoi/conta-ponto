@@ -65,7 +65,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
   ///Scrolls down the view, with an animation, to the last element. Usually called when a new counter is added.
   void _scrollDown() {
     _controller.animateTo(
-      _controller.position.maxScrollExtent + 106,
+      _controller.position.maxScrollExtent + 110,
       duration: const Duration(seconds: 1, milliseconds: 500),
       curve: Curves.fastOutSlowIn,
     );
@@ -103,11 +103,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          UITextStrings.appName,
-          style: UITextStyles.appBar,
-        ),
-        backgroundColor: UIColors.appBar,
+        title: const Text(UITextStrings.appName),
         actions: [
           //Button to delete all counters.
           IconButton(
@@ -117,29 +113,32 @@ class _MainPageMobileState extends State<MainPageMobile> {
                   ? showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                        backgroundColor: UIColors.counterTile,
                         title: const Text(
                           UITextStrings.dialogTitleDeleteAll,
-                          style: UITextStyles.dialogTitle,
                         ),
                         content: const Text(
                           UITextStrings.dialogContentDeleteAll,
-                          style: UITextStyles.dialogContent,
                         ),
                         actions: [
                           //"No" button
                           TextButton(
-                            child: const Text(
+                            child: Text(
                               UITextStrings.dialogButtonNo,
-                              style: UITextStyles.dialogButton,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(color: UIColors.actionButton),
                             ),
                             onPressed: () => Navigator.pop(context, 'No'),
                           ),
                           //"Yes" button
                           TextButton(
-                            child: const Text(
+                            child: Text(
                               UITextStrings.dialogButtonYes,
-                              style: UITextStyles.dialogButton,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(color: UIColors.actionButton),
                             ),
                             onPressed: () {
                               setState(() => _counterList.clear());
@@ -156,9 +155,10 @@ class _MainPageMobileState extends State<MainPageMobile> {
         ],
       ),
       //Floating button to add a counter. Can be held to add an [amount] of counters.
+      //TODO add tooltip to button
       floatingActionButton: InkWell(
         child: FloatingActionButton(
-          child: const Icon(Icons.add),
+          child: const Icon(Icons.add, color: Colors.white),
           backgroundColor: UIColors.actionButton,
           onPressed: _addNewCounter,
         ),
@@ -168,22 +168,21 @@ class _MainPageMobileState extends State<MainPageMobile> {
             context: context,
             builder: (BuildContext context) => StatefulBuilder(
               builder: (context, setState) => AlertDialog(
-                backgroundColor: UIColors.counterTile,
-                title: const Text(
-                  UITextStrings.dialogTitleAddMultiple,
-                  style: UITextStyles.dialogTitle,
-                ),
+                title: const Text(UITextStrings.dialogTitleAddMultiple),
                 //This TextField only accepts number input
                 content: TextField(
                   autofocus: true,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   cursorColor: UIColors.actionButton,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: UITextStrings.addMultipleHintText,
-                    hintStyle: UITextStyles.dialogTextFieldHint,
-                    border: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: UIColors.labelText),
+                    border: const OutlineInputBorder(),
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                         color: UIColors.actionButton,
                       ),
@@ -199,9 +198,12 @@ class _MainPageMobileState extends State<MainPageMobile> {
                 actions: <TextButton>[
                   //"Cancel" button
                   TextButton(
-                    child: const Text(
+                    child: Text(
                       UITextStrings.dialogButtonCancel,
-                      style: UITextStyles.dialogButton,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: UIColors.actionButton),
                     ),
                     onPressed: () => Navigator.pop(context, 'Cancel'),
                   ),
@@ -210,9 +212,14 @@ class _MainPageMobileState extends State<MainPageMobile> {
                     child: Text(
                       UITextStrings.dialogButtonOK,
                       style: amount >= 1
-                          ? UITextStyles.dialogButton
-                          : UITextStyles.dialogButton
-                              .copyWith(color: UIColors.labelText),
+                          ? Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: UIColors.actionButton)
+                          : Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: UIColors.labelText),
                     ),
                     onPressed: amount >= 1
                         ? () {
@@ -229,7 +236,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
       ),
       //ListView that generates all the tiles for the counters.
       body: ListView.builder(
-        padding: const EdgeInsets.only(bottom: 80),
+        padding: const EdgeInsets.only(bottom: 80, top: 8),
         shrinkWrap: true,
         itemCount: _counterList.length,
         controller: _controller,
