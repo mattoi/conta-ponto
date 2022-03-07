@@ -13,8 +13,9 @@ class MainPageMobile extends StatefulWidget {
 
 class _MainPageMobileState extends State<MainPageMobile> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  final List<Counter> _counterList = [];
-  final _controller = ScrollController();
+  //final List<Counter> _counterList = [];
+  final _listScrollController = ScrollController();
+  final _listController = CounterListController();
 
   ///Loads the list of saved counters, if any, from shared preferences.
   void loadFromPrefs() async {
@@ -23,7 +24,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
     if (list != null) {
       for (int i = 0; i < list.length; i++) {
         setState(() {
-          _counterList
+          _listController.list
               .add(Counter.withValue(index: i, value: int.parse(list[i])));
         });
       }
@@ -34,54 +35,19 @@ class _MainPageMobileState extends State<MainPageMobile> {
   void saveToPrefs() async {
     final prefs = await _prefs;
     List<String> list = [];
-    for (var i = 0; i < _counterList.length; i++) {
-      list.add(_counterList[i].value.toString());
+    for (var i = 0; i < _listController.list.length; i++) {
+      list.add(_listController.list[i].value.toString());
     }
     prefs.setStringList('counter_list', list);
   }
 
-  ///Adds a new counter at the end of the list. Can't have more than 999 counters.
-  void _addNewCounter() {
-    if (_counterList.length < 999) {
-      setState(() => _counterList.add(Counter(index: _counterList.length)));
-      saveToPrefs();
-      _scrollDown();
-    }
-  }
-
-  ///Adds an [amount] of new counters at the end of the list. Can't have more than 999 counters.
-  void _addMultipleCounters(int amount) {
-    if (_counterList.length + amount <= 999) {
-      setState(() {
-        for (int i = 0; i < amount; i++) {
-          _counterList.add(Counter(index: _counterList.length));
-        }
-      });
-      saveToPrefs();
-      _scrollDown();
-    }
-  }
-
   ///Scrolls down the view, with an animation, to the last element. Usually called when a new counter is added.
   void _scrollDown() {
-    _controller.animateTo(
-      _controller.position.maxScrollExtent + 110,
+    _listScrollController.animateTo(
+      _listScrollController.position.maxScrollExtent + 110,
       duration: const Duration(seconds: 1, milliseconds: 500),
       curve: Curves.fastOutSlowIn,
     );
-  }
-
-  ///Deletes a counter at [index] and its tile from the list, updating all subsequent indexes accordingly.
-  void _deleteCounter(int index) {
-    if (index < _counterList.length) {
-      setState(() {
-        for (int i = index; i < _counterList.length - 1; i++) {
-          _counterList[i].value = _counterList[i + 1].value;
-        }
-        _counterList.removeLast();
-      });
-      saveToPrefs();
-    }
   }
 
   ///Calls setState to redraw the values on screen and saves them into shared preferences.
@@ -110,7 +76,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              _counterList.isNotEmpty
+              _listController.list.isNotEmpty
                   ? showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
@@ -148,7 +114,8 @@ class _MainPageMobileState extends State<MainPageMobile> {
                                           .secondary),
                             ),
                             onPressed: () {
-                              setState(() => _counterList.clear());
+                              _listController.list.clear();
+                              _updateCounter();
                               Navigator.pop(context, 'Yes');
                             },
                           ),
@@ -167,7 +134,11 @@ class _MainPageMobileState extends State<MainPageMobile> {
         child: FloatingActionButton(
           child: const Icon(Icons.add, color: Colors.white),
           backgroundColor: Theme.of(context).colorScheme.secondary,
-          onPressed: _addNewCounter,
+          onPressed: () {
+            _listController.addToList(1);
+            _updateCounter();
+            _scrollDown();
+          },
         ),
         onLongPress: () {
           int amount = -1;
@@ -197,7 +168,9 @@ class _MainPageMobileState extends State<MainPageMobile> {
                   onChanged: (value) {
                     setState(() {
                       amount = int.tryParse(value) ?? -1;
-                      if (amount + _counterList.length > 999) amount = -1;
+                      if (amount + _listController.list.length > 999) {
+                        amount = -1;
+                      }
                     });
                   },
                 ),
@@ -223,7 +196,10 @@ class _MainPageMobileState extends State<MainPageMobile> {
                     ),
                     onPressed: amount >= 1
                         ? () {
-                            _addMultipleCounters(amount);
+                            _listController.addToList(amount);
+                            _updateCounter();
+                            saveToPrefs();
+                            _scrollDown();
                             Navigator.pop(context, 'OK');
                           }
                         : null,
@@ -238,14 +214,18 @@ class _MainPageMobileState extends State<MainPageMobile> {
       body: ListView.builder(
         padding: const EdgeInsets.only(bottom: 80, top: 8),
         shrinkWrap: true,
-        itemCount: _counterList.length,
-        controller: _controller,
+        itemCount: _listController.list.length,
+        controller: _listScrollController,
         itemBuilder: (BuildContext context, int index) => CounterTile(
-          counter: _counterList[index],
+          counter: _listController.list[index],
           updateFunction: _updateCounter,
-          deleteFunction: _deleteCounter,
+          deleteFunction: (index) {
+            _listController.deleteCounter(index);
+            _updateCounter();
+          },
         ),
       ),
     );
   }
-}
+}//TODO delete button not updating state, but deleteAll is. 
+//neither are  writing into prefs

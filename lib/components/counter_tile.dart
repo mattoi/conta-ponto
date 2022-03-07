@@ -15,7 +15,7 @@ class Counter {
   Counter.withValue({required this.index, required this.value});
 
   ///Increments the value of the counter by [number].
-  ///Decrements if it's negative, but cannot go below 0.
+  ///Decrements if it's negative. Cannot go below 0 or above 999.
   void increment(int number) {
     //Ensures it's not going below 0.
     if (value + number >= 0 && value + number < 1000) value += number;
@@ -25,6 +25,32 @@ class Counter {
   void setValue(int? newValue) => value = newValue ?? value;
 }
 
+class CounterListController {
+  List<Counter> list = [];
+
+  ///Adds an [amount] of new counters at the end of the list. Can't have more than 999 counters.
+  void addToList(int amount) {
+    if (list.length + amount <= 999) {
+      for (int i = 0; i < amount; i++) {
+        list.add(Counter(index: list.length));
+      }
+    }
+  }
+
+  ///Deletes a counter at [index] and its tile from the list, updating all subsequent indexes accordingly.
+  void deleteCounter(int index) {
+    if (index < list.length) {
+      for (int i = index; i < list.length - 1; i++) {
+        list[i].value = list[i + 1].value;
+      }
+      list.removeLast();
+    }
+  }
+  //setState() => _listController.deleteCounter(index);
+  //saveToPrefs;
+}
+
+///The UI tile that shows a counter's info.
 class CounterTile extends StatelessWidget {
   final Counter counter;
 
@@ -133,7 +159,7 @@ class CounterTile extends StatelessWidget {
                       onChanged: (value) {
                         setState(() {
                           newValue = int.tryParse(value) ?? -1;
-                          if (newValue > 999) newValue = -1;
+                          if (newValue > 999 || newValue < 0) newValue = -1;
                         });
                       },
                     ),
@@ -161,7 +187,7 @@ class CounterTile extends StatelessWidget {
                                       Theme.of(context).colorScheme.secondary)
                               : Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color:
-                                      Theme.of(context).colorScheme.secondary),
+                                      Theme.of(context).colorScheme.onSurface),
                         ),
                         onPressed: newValue >= 0
                             ? () {

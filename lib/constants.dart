@@ -18,6 +18,7 @@ final appTheme = ThemeData.dark().copyWith(
   ),
   iconTheme: IconThemeData(color: _appColorScheme.onPrimary),
   backgroundColor: _appColorScheme.background,
+  hintColor: _appColorScheme.onSurface,
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: _appColorScheme.secondary,
   ),
