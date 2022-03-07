@@ -1,84 +1,74 @@
 import 'package:flutter/material.dart';
 
-///The colors used in the app UI.
-abstract class UIColors {
-  static const appBar = Color(0xffb00b69);
-  static const actionButton = Color(0xff69b00b);
-  static const appBackground = Color(0xFF0A0E20);
-  static const counterTile = Color(0xFF1D1E30);
-  static const labelText = Color(0xFF8D8E98);
-  static const roundButton = Color(0xFF4C4F5E);
-}
-
-final colorScheme = const ColorScheme.dark().copyWith(
+final _appColorScheme = const ColorScheme.dark().copyWith(
   background: const Color(0xFF0A0E20),
   primary: const Color(0xffb00b69),
   secondary: const Color(0xff69b00b),
+  surface: const Color(0xFF1D1E30),
+  surfaceVariant: const Color(0xFF4C4F5E),
+  onPrimary: Colors.white,
+  onSurface: const Color(0xFF8D8E98),
 );
-
+const _fontFamily = 'Roboto';
 final appTheme = ThemeData.dark().copyWith(
-  primaryColor: UIColors.appBackground,
-  scaffoldBackgroundColor: UIColors.appBackground,
-  //colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.pink),
-  appBarTheme: const AppBarTheme(
-    color: UIColors.appBar,
-    titleTextStyle: TextStyle(
-      fontFamily: 'Roboto',
+  colorScheme: _appColorScheme,
+  appBarTheme: AppBarTheme(
+    color: _appColorScheme.primary,
+    titleTextStyle: const TextStyle(fontFamily: _fontFamily, fontSize: 20),
+  ),
+  iconTheme: IconThemeData(color: _appColorScheme.onPrimary),
+  backgroundColor: _appColorScheme.background,
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: _appColorScheme.secondary,
+  ),
+  dialogTheme: DialogTheme(
+    backgroundColor: _appColorScheme.surface,
+    titleTextStyle: const TextStyle(
+      fontFamily: _fontFamily,
       fontSize: 20,
     ),
-  ),
-  iconTheme: const IconThemeData(color: Colors.white),
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: UIColors.actionButton,
-  ),
-  dialogTheme: const DialogTheme(
-    backgroundColor: UIColors.counterTile,
-    titleTextStyle: TextStyle(
-      fontFamily: 'Roboto',
-      fontSize: 20,
-    ),
-    contentTextStyle: TextStyle(
-      fontFamily: 'Roboto',
+    contentTextStyle: const TextStyle(
+      fontFamily: _fontFamily,
       fontSize: 16,
     ),
   ),
-  textTheme: const TextTheme(
+  textTheme: TextTheme(
     // 1- and 2-digit index number
-    displayLarge: TextStyle(
-      fontFamily: 'Roboto',
+    displayLarge: const TextStyle(
+      fontFamily: _fontFamily,
       fontSize: 64,
     ),
     // 3-digit index number
-    displayMedium: TextStyle(
-      fontFamily: 'Roboto',
+    displayMedium: const TextStyle(
+      fontFamily: _fontFamily,
       fontSize: 38,
       fontWeight: FontWeight.w900,
     ),
     // Counter label
     labelMedium: TextStyle(
-      fontFamily: 'Roboto',
+      fontFamily: _fontFamily,
       fontSize: 16,
-      color: UIColors.labelText,
+      color: _appColorScheme.onSurface,
     ),
     // Counter value
-    headlineLarge: TextStyle(
-      fontFamily: 'Roboto',
+    headlineLarge: const TextStyle(
+      fontFamily: _fontFamily,
       fontWeight: FontWeight.w900,
       fontSize: 40,
     ),
     // AppBar title, dialog title
-    titleSmall: TextStyle(
-      fontFamily: 'Roboto',
+    titleSmall: const TextStyle(
+      fontFamily: _fontFamily,
       fontSize: 20,
     ),
     // Dialog text, hint text
-    bodyMedium: TextStyle(
-      fontFamily: 'Roboto',
+    bodyMedium: const TextStyle(
+      fontFamily: _fontFamily,
       fontSize: 16,
     ),
     // Dialog button
-    bodySmall: TextStyle(
-      fontFamily: 'Roboto',
+    bodySmall: const TextStyle(
+      fontFamily: _fontFamily,
       fontSize: 14,
     ),
   ),

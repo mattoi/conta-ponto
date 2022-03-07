@@ -102,6 +102,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: const Text(UITextStrings.appName),
         actions: [
@@ -127,7 +128,10 @@ class _MainPageMobileState extends State<MainPageMobile> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
-                                  ?.copyWith(color: UIColors.actionButton),
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
                             ),
                             onPressed: () => Navigator.pop(context, 'No'),
                           ),
@@ -138,7 +142,10 @@ class _MainPageMobileState extends State<MainPageMobile> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
-                                  ?.copyWith(color: UIColors.actionButton),
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
                             ),
                             onPressed: () {
                               setState(() => _counterList.clear());
@@ -159,7 +166,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
       floatingActionButton: InkWell(
         child: FloatingActionButton(
           child: const Icon(Icons.add, color: Colors.white),
-          backgroundColor: UIColors.actionButton,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           onPressed: _addNewCounter,
         ),
         onLongPress: () {
@@ -171,20 +178,19 @@ class _MainPageMobileState extends State<MainPageMobile> {
                 title: const Text(UITextStrings.dialogTitleAddMultiple),
                 //This TextField only accepts number input
                 content: TextField(
+                  //TODO add errortext
                   autofocus: true,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
-                  cursorColor: UIColors.actionButton,
+                  cursorColor: Theme.of(context).colorScheme.secondary,
                   decoration: InputDecoration(
                     hintText: UITextStrings.addMultipleHintText,
-                    hintStyle: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: UIColors.labelText),
+                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface),
                     border: const OutlineInputBorder(),
-                    focusedBorder: const OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: UIColors.actionButton,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
                   ),
@@ -200,10 +206,8 @@ class _MainPageMobileState extends State<MainPageMobile> {
                   TextButton(
                     child: Text(
                       UITextStrings.dialogButtonCancel,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: UIColors.actionButton),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary),
                     ),
                     onPressed: () => Navigator.pop(context, 'Cancel'),
                   ),
@@ -212,14 +216,10 @@ class _MainPageMobileState extends State<MainPageMobile> {
                     child: Text(
                       UITextStrings.dialogButtonOK,
                       style: amount >= 1
-                          ? Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.copyWith(color: UIColors.actionButton)
-                          : Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.copyWith(color: UIColors.labelText),
+                          ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary)
+                          : Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
                     ),
                     onPressed: amount >= 1
                         ? () {

@@ -44,10 +44,11 @@ class CounterTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-          color: UIColors.counterTile, borderRadius: BorderRadius.circular(10)),
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(10)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -90,10 +91,8 @@ class CounterTile extends StatelessWidget {
                 children: [
                   Text(
                     UITextStrings.counterLabel,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: UIColors.labelText),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface),
                   ),
                   Text(
                     counter.value.toString(),
@@ -109,25 +108,25 @@ class CounterTile extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) => StatefulBuilder(
                   builder: (context, setState) => AlertDialog(
-                    title: Text(
-                      UITextStrings.dialogTitleSetCounter,
-                    ),
+                    title: const Text(UITextStrings.dialogTitleSetCounter),
                     //This TextField only accepts number input
                     content: TextField(
+                      //TODO add errortext
                       autofocus: true,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       keyboardType: TextInputType.number,
-                      cursorColor: UIColors.actionButton,
+                      cursorColor: Theme.of(context).colorScheme.secondary,
                       decoration: InputDecoration(
                         hintText: counter.value.toString(),
                         hintStyle: Theme.of(context)
                             .textTheme
                             .bodyMedium
-                            ?.copyWith(color: UIColors.labelText),
+                            ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface),
                         border: const OutlineInputBorder(),
-                        focusedBorder: const OutlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: UIColors.actionButton,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                       ),
@@ -146,7 +145,9 @@ class CounterTile extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall
-                              ?.copyWith(color: UIColors.actionButton),
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
                         ),
                         onPressed: () => Navigator.pop(context, 'Cancel'),
                       ),
@@ -155,14 +156,12 @@ class CounterTile extends StatelessWidget {
                         child: Text(
                           UITextStrings.dialogButtonOK,
                           style: newValue >= 0
-                              ? Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: UIColors.actionButton)
-                              : Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(color: UIColors.labelText),
+                              ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary)
+                              : Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
                         ),
                         onPressed: newValue >= 0
                             ? () {
