@@ -26,6 +26,8 @@ class Counter {
 }
 
 class CounterListController {
+  //TODO consider bringing the listview builder, as well as all the list operating functions, into this file
+  //maybe a tile for desktop will be needed too
   List<Counter> list = [];
 
   ///Adds an [amount] of new counters at the end of the list. Can't have more than 999 counters.
@@ -84,7 +86,7 @@ class CounterTile extends StatelessWidget {
           //Container with the index number. Displayed index starts at 1.
           Container(
             //Width should be able to fit 3 digits
-            width: 80,
+            width: 72,
             margin: const EdgeInsets.symmetric(horizontal: 8),
             alignment: Alignment.centerRight,
             child: Text(
@@ -97,7 +99,7 @@ class CounterTile extends StatelessWidget {
           //Button to decrement from the counter.
           const SizedBox(width: 0),
           RoundButton(
-            size: 32,
+            diameter: 32,
             child: const Icon(Icons.remove),
             onPressed: () {
               counter.increment(-1);
@@ -203,7 +205,7 @@ class CounterTile extends StatelessWidget {
           ),
           //Button to increment from the counter.
           RoundButton(
-            size: 32,
+            diameter: 32,
             child: const Icon(Icons.add),
             onPressed: () {
               counter.increment(1);
