@@ -70,6 +70,9 @@ class CounterTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      //TODO the layout might break on devices with a really low resolution.
+      //might need a check for the device size and apply MediaQuery.of(context).size
+      //with a multiplier to all elements accordingly
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(

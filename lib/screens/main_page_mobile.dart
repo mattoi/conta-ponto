@@ -13,13 +13,12 @@ class MainPageMobile extends StatefulWidget {
 }
 
 class _MainPageMobileState extends State<MainPageMobile> {
-  final _listScrollController = ScrollController();
   final _listController = CounterListController();
-
+  final _scrollController = ScrollController();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   ///Loads the list of saved counters, if any, from shared preferences.
-  void loadFromPrefs() async {
+  void _loadFromPrefs() async {
     final prefs = await _prefs;
     final List<String>? cachedList = prefs.getStringList('counter_list');
     if (cachedList != null) {
@@ -33,7 +32,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
   }
 
   ///Saves all counters as a list into shared preferences.
-  void saveToPrefs() async {
+  void _saveToPrefs() async {
     final prefs = await _prefs;
     List<String> savedList = [];
     for (var i = 0; i < _listController.list.length; i++) {
@@ -44,8 +43,8 @@ class _MainPageMobileState extends State<MainPageMobile> {
 
   ///Scrolls down the view, with an animation, to the last element. Usually called when a new counter is added.
   void _scrollDown() {
-    _listScrollController.animateTo(
-      _listScrollController.position.maxScrollExtent + 110,
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent + 104,
       duration: const Duration(seconds: 1, milliseconds: 500),
       curve: Curves.fastOutSlowIn,
     );
@@ -54,12 +53,11 @@ class _MainPageMobileState extends State<MainPageMobile> {
   @override
   void initState() {
     super.initState();
-    loadFromPrefs();
+    _loadFromPrefs();
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {});
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -111,9 +109,9 @@ class _MainPageMobileState extends State<MainPageMobile> {
                     ],
                   ),
                 );
-                if (result == 'OK') {
+                if (result == 'Yes') {
                   setState(() => _listController.list.clear());
-                  saveToPrefs();
+                  _saveToPrefs();
                 }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -132,7 +130,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
           //tooltip: UITextStrings.actionButtonTooltip,
           onPressed: () {
             setState(() => _listController.addToList(1));
-            saveToPrefs();
+            _saveToPrefs();
             _scrollDown();
           },
         ),
@@ -199,7 +197,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
           );
           if (result == 'OK') {
             setState(() => _listController.addToList(amount));
-            saveToPrefs();
+            _saveToPrefs();
             //TODO scroll is not going all the way down after confirming. it seems to try to go to the last known "bottom" position
             _scrollDown();
           }
@@ -210,17 +208,18 @@ class _MainPageMobileState extends State<MainPageMobile> {
         padding: const EdgeInsets.only(bottom: 80, top: 8),
         shrinkWrap: true,
         itemCount: _listController.list.length,
-        controller: _listScrollController,
+        controller: _scrollController,
         itemBuilder: (BuildContext context, int index) => CounterTile(
           counter: _listController.list[index],
           updateFunction: () {
+            // setState with an expression body into an async function causes an exception.
             setState(() {
-              saveToPrefs();
+              _saveToPrefs();
             });
           },
           deleteFunction: (index) {
             setState(() => _listController.removeAt(index));
-            saveToPrefs();
+            _saveToPrefs();
           },
         ),
       ),
