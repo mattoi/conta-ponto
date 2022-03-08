@@ -16,6 +16,14 @@ final appTheme = ThemeData.dark().copyWith(
     color: _appColorScheme.primary,
     titleTextStyle: const TextStyle(fontFamily: _fontFamily, fontSize: 20),
   ),
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: _appColorScheme.surface,
+    contentTextStyle: TextStyle(
+      fontFamily: _fontFamily,
+      fontSize: 14,
+      color: _appColorScheme.onBackground,
+    ),
+  ),
   iconTheme: IconThemeData(color: _appColorScheme.onPrimary),
   backgroundColor: _appColorScheme.background,
   hintColor: _appColorScheme.onSurface,

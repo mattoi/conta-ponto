@@ -194,6 +194,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
                           : Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurface),
                     ),
+                    //TODO scroll is not going all the way down after confirming
                     onPressed: amount >= 1
                         ? () {
                             _listController.addToList(amount);

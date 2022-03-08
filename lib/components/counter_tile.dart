@@ -46,8 +46,6 @@ class CounterListController {
       list.removeLast();
     }
   }
-  //setState() => _listController.deleteCounter(index);
-  //saveToPrefs;
 }
 
 ///The UI tile that shows a counter's info.
