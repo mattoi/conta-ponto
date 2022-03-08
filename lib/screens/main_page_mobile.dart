@@ -129,87 +129,90 @@ class _MainPageMobileState extends State<MainPageMobile> {
         ],
       ),
       //Floating button to add a counter. Can be held to add an [amount] of counters.
-      //TODO add tooltip to button
-      floatingActionButton: InkWell(
-        child: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        tooltip: UITextStrings.actionButtonTooltip,
+        onPressed: () {
+          _listController.addToList(1);
+          _updateCounter();
+          _scrollDown();
+        },
+        child: GestureDetector(
           child: const Icon(Icons.add, color: Colors.white),
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          onPressed: () {
-            _listController.addToList(1);
-            _updateCounter();
-            _scrollDown();
-          },
-        ),
-        onLongPress: () {
-          int amount = -1;
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => StatefulBuilder(
-              builder: (context, setState) => AlertDialog(
-                title: const Text(UITextStrings.dialogTitleAddMultiple),
-                //This TextField only accepts number input
-                content: TextField(
-                  //TODO add errortext
-                  autofocus: true,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  keyboardType: TextInputType.number,
-                  cursorColor: Theme.of(context).colorScheme.secondary,
-                  decoration: InputDecoration(
-                    hintText: UITextStrings.addMultipleHintText,
-                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
-                    border: const OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.secondary,
+          onLongPress: () {
+            int amount = -1;
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => StatefulBuilder(
+                builder: (context, setState) => AlertDialog(
+                  title: const Text(UITextStrings.dialogTitleAddMultiple),
+                  //This TextField only accepts number input
+                  content: TextField(
+                    //TODO add errortext
+                    autofocus: true,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    keyboardType: TextInputType.number,
+                    cursorColor: Theme.of(context).colorScheme.secondary,
+                    decoration: InputDecoration(
+                      hintText: UITextStrings.addMultipleHintText,
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
+                      border: const OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        amount = int.tryParse(value) ?? -1;
+                        if (amount + _listController.list.length > 999) {
+                          amount = -1;
+                        }
+                      });
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      amount = int.tryParse(value) ?? -1;
-                      if (amount + _listController.list.length > 999) {
-                        amount = -1;
-                      }
-                    });
-                  },
+                  actions: <TextButton>[
+                    //"Cancel" button
+                    TextButton(
+                      child: Text(
+                        UITextStrings.dialogButtonCancel,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                    ),
+                    //"OK" button, only available if value entered is a number >= 0
+                    TextButton(
+                      child: Text(
+                        UITextStrings.dialogButtonOK,
+                        style: amount >= 1
+                            ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.secondary)
+                            : Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                      //TODO scroll is not going all the way down after confirming
+                      onPressed: amount >= 1
+                          ? () {
+                              _listController.addToList(amount);
+                              _updateCounter();
+                              saveToPrefs();
+                              _scrollDown();
+                              Navigator.pop(context, 'OK');
+                            }
+                          : null,
+                    ),
+                  ],
                 ),
-                actions: <TextButton>[
-                  //"Cancel" button
-                  TextButton(
-                    child: Text(
-                      UITextStrings.dialogButtonCancel,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary),
-                    ),
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
-                  ),
-                  //"OK" button, only available if value entered is a number >= 0
-                  TextButton(
-                    child: Text(
-                      UITextStrings.dialogButtonOK,
-                      style: amount >= 1
-                          ? Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.secondary)
-                          : Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface),
-                    ),
-                    //TODO scroll is not going all the way down after confirming
-                    onPressed: amount >= 1
-                        ? () {
-                            _listController.addToList(amount);
-                            _updateCounter();
-                            saveToPrefs();
-                            _scrollDown();
-                            Navigator.pop(context, 'OK');
-                          }
-                        : null,
-                  ),
-                ],
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
       //ListView that generates all the tiles for the counters.
       body: ListView.builder(
@@ -228,5 +231,5 @@ class _MainPageMobileState extends State<MainPageMobile> {
       ),
     );
   }
-}//TODO delete button not updating state, but deleteAll is. 
-//neither are  writing into prefs
+}
+//TODO fix ugly actionbutton inkwell
