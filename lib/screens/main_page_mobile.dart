@@ -68,55 +68,57 @@ class _MainPageMobileState extends State<MainPageMobile> {
           //Button to delete all counters.
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () {
-              _listController.list.isNotEmpty
-                  ? showDialog(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: const Text(
-                          UITextStrings.dialogTitleDeleteAll,
+            onPressed: () async {
+              if (_listController.list.isNotEmpty) {
+                final result = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text(
+                      UITextStrings.dialogTitleDeleteAll,
+                    ),
+                    content: const Text(
+                      UITextStrings.dialogContentDeleteAll,
+                    ),
+                    actions: [
+                      //"No" button
+                      TextButton(
+                        child: Text(
+                          UITextStrings.dialogButtonNo,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
                         ),
-                        content: const Text(
-                          UITextStrings.dialogContentDeleteAll,
-                        ),
-                        actions: [
-                          //"No" button
-                          TextButton(
-                            child: Text(
-                              UITextStrings.dialogButtonNo,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
-                            ),
-                            onPressed: () => Navigator.pop(context, 'No'),
-                          ),
-                          //"Yes" button
-                          TextButton(
-                            child: Text(
-                              UITextStrings.dialogButtonYes,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
-                            ),
-                            onPressed: () {
-                              setState(() => _listController.list.clear());
-                              saveToPrefs();
-                              Navigator.pop(context, 'Yes');
-                            },
-                          ),
-                        ],
+                        onPressed: () => Navigator.pop(context, 'No'),
                       ),
-                    )
-                  : ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text(UITextStrings.emptyListSnackBar)));
+                      //"Yes" button
+                      TextButton(
+                        child: Text(
+                          UITextStrings.dialogButtonYes,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context, 'Yes');
+                        },
+                      ),
+                    ],
+                  ),
+                );
+                if (result == 'OK') {
+                  setState(() => _listController.list.clear());
+                  saveToPrefs();
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text(UITextStrings.emptyListSnackBar)));
+              }
             },
           ),
         ],
@@ -134,9 +136,9 @@ class _MainPageMobileState extends State<MainPageMobile> {
             _scrollDown();
           },
         ),
-        onLongPress: () {
+        onLongPress: () async {
           int amount = -1;
-          showDialog(
+          final result = await showDialog(
             context: context,
             builder: (BuildContext context) => StatefulBuilder(
               builder: (context, setState) => AlertDialog(
@@ -188,22 +190,19 @@ class _MainPageMobileState extends State<MainPageMobile> {
                           : Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurface),
                     ),
-                    onPressed: amount >= 1
-                        ? () {
-                            super.setState(() {
-                              _listController.addToList(amount);
-                            });
-                            saveToPrefs();
-                            //TODO scroll is not going all the way down after confirming. it seems to try to go to the last known "bottom" position
-                            _scrollDown();
-                            Navigator.pop(context, 'OK');
-                          }
-                        : null,
+                    onPressed:
+                        amount >= 1 ? () => Navigator.pop(context, 'OK') : null,
                   ),
                 ],
               ),
             ),
           );
+          if (result == 'OK') {
+            setState(() => _listController.addToList(amount));
+            saveToPrefs();
+            //TODO scroll is not going all the way down after confirming. it seems to try to go to the last known "bottom" position
+            _scrollDown();
+          }
         },
       ),
       //ListView that generates all the tiles for the counters.
@@ -214,9 +213,11 @@ class _MainPageMobileState extends State<MainPageMobile> {
         controller: _listScrollController,
         itemBuilder: (BuildContext context, int index) => CounterTile(
           counter: _listController.list[index],
-          updateFunction: () => setState(() {
-            saveToPrefs();
-          }),
+          updateFunction: () {
+            setState(() {
+              saveToPrefs();
+            });
+          },
           deleteFunction: (index) {
             setState(() => _listController.removeAt(index));
             saveToPrefs();

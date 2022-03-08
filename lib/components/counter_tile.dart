@@ -126,10 +126,10 @@ class CounterTile extends StatelessWidget {
                 ],
               ),
             ),
-            onTap: (() {
+            onTap: (() async {
               //-1 is used if an invalid number is entered.  it's used instead of null for comparison purposes
               int newValue = -1;
-              showDialog(
+              final result = await showDialog(
                 context: context,
                 builder: (BuildContext context) => StatefulBuilder(
                   builder: (context, setState) => AlertDialog(
@@ -189,17 +189,17 @@ class CounterTile extends StatelessWidget {
                                       Theme.of(context).colorScheme.onSurface),
                         ),
                         onPressed: newValue != -1
-                            ? () {
-                                counter.setValue(newValue);
-                                updateFunction.call();
-                                Navigator.pop(context, 'OK');
-                              }
+                            ? () => Navigator.pop(context, 'OK')
                             : null,
                       ),
                     ],
                   ),
                 ),
               );
+              if (result == 'OK') {
+                counter.setValue(newValue);
+                updateFunction.call();
+              }
             }),
           ),
           //Button to increment from the counter.
