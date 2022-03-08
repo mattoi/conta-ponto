@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:conta_ponto/constants.dart';
 import 'package:conta_ponto/components/counter_tile.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:conta_ponto/components/round_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPageMobile extends StatefulWidget {
   const MainPageMobile({Key? key}) : super(key: key);
@@ -13,32 +13,33 @@ class MainPageMobile extends StatefulWidget {
 }
 
 class _MainPageMobileState extends State<MainPageMobile> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final _listScrollController = ScrollController();
   final _listController = CounterListController();
+
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   ///Loads the list of saved counters, if any, from shared preferences.
   void loadFromPrefs() async {
     final prefs = await _prefs;
-    final List<String>? list = prefs.getStringList('counter_list');
-    if (list != null) {
-      for (int i = 0; i < list.length; i++) {
-        setState(() {
-          _listController.list
-              .add(Counter.withValue(index: i, value: int.parse(list[i])));
-        });
-      }
+    final List<String>? cachedList = prefs.getStringList('counter_list');
+    if (cachedList != null) {
+      setState(() {
+        for (int i = 0; i < cachedList.length; i++) {
+          _listController.list.add(
+              Counter.withValue(index: i, value: int.parse(cachedList[i])));
+        }
+      });
     }
   }
 
   ///Saves all counters as a list into shared preferences.
   void saveToPrefs() async {
     final prefs = await _prefs;
-    List<String> list = [];
+    List<String> savedList = [];
     for (var i = 0; i < _listController.list.length; i++) {
-      list.add(_listController.list[i].value.toString());
+      savedList.add(_listController.list[i].value.toString());
     }
-    prefs.setStringList('counter_list', list);
+    prefs.setStringList('counter_list', savedList);
   }
 
   ///Scrolls down the view, with an animation, to the last element. Usually called when a new counter is added.
@@ -50,15 +51,6 @@ class _MainPageMobileState extends State<MainPageMobile> {
     );
   }
 
-  ///Calls setState to redraw the values on screen and saves them into shared preferences.
-  // Honestly I can't remember who implemented it like this or whether it's
-  // optimal or not, but it works.
-  void _updateCounter() {
-    setState(() {
-      saveToPrefs();
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -67,6 +59,7 @@ class _MainPageMobileState extends State<MainPageMobile> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {});
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -114,8 +107,8 @@ class _MainPageMobileState extends State<MainPageMobile> {
                                           .secondary),
                             ),
                             onPressed: () {
-                              _listController.list.clear();
-                              _updateCounter();
+                              setState(() => _listController.list.clear());
+                              saveToPrefs();
                               Navigator.pop(context, 'Yes');
                             },
                           ),
@@ -136,8 +129,8 @@ class _MainPageMobileState extends State<MainPageMobile> {
           child: const Icon(Icons.add, color: Colors.white),
           //tooltip: UITextStrings.actionButtonTooltip,
           onPressed: () {
-            _listController.addToList(1);
-            _updateCounter();
+            setState(() => _listController.addToList(1));
+            saveToPrefs();
             _scrollDown();
           },
         ),
@@ -195,11 +188,13 @@ class _MainPageMobileState extends State<MainPageMobile> {
                           : Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurface),
                     ),
-                    //TODO scroll is not going all the way down after confirming. it seems to try to go to the last known "bottom" position
                     onPressed: amount >= 1
                         ? () {
-                            _listController.addToList(amount);
-                            _updateCounter();
+                            super.setState(() {
+                              _listController.addToList(amount);
+                            });
+                            saveToPrefs();
+                            //TODO scroll is not going all the way down after confirming. it seems to try to go to the last known "bottom" position
                             _scrollDown();
                             Navigator.pop(context, 'OK');
                           }
@@ -219,10 +214,12 @@ class _MainPageMobileState extends State<MainPageMobile> {
         controller: _listScrollController,
         itemBuilder: (BuildContext context, int index) => CounterTile(
           counter: _listController.list[index],
-          updateFunction: _updateCounter,
+          updateFunction: () => setState(() {
+            saveToPrefs();
+          }),
           deleteFunction: (index) {
-            _listController.deleteCounter(index);
-            _updateCounter();
+            setState(() => _listController.removeAt(index));
+            saveToPrefs();
           },
         ),
       ),

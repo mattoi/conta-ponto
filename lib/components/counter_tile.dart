@@ -39,8 +39,8 @@ class CounterListController {
     }
   }
 
-  ///Deletes a counter at [index] and its tile from the list, updating all subsequent indexes accordingly.
-  void deleteCounter(int index) {
+  ///Removes a counter at [index] and its tile from the list, updating all subsequent counters accordingly.
+  void removeAt(int index) {
     if (index < list.length) {
       for (int i = index; i < list.length - 1; i++) {
         list[i].value = list[i + 1].value;
@@ -54,10 +54,10 @@ class CounterListController {
 class CounterTile extends StatelessWidget {
   final Counter counter;
 
-  ///Function to update the numbers on the screen.
+  ///Callback to update the numbers on the screen.
   final Function() updateFunction;
 
-  ///Function to delete the counter and its tile.
+  ///Callback to delete the counter and its tile.
   final Function(int) deleteFunction;
 
   const CounterTile({
@@ -97,7 +97,6 @@ class CounterTile extends StatelessWidget {
             ),
           ),
           //Button to decrement from the counter.
-          const SizedBox(width: 0),
           RoundButton(
             diameter: 32,
             child: const Icon(Icons.remove),
@@ -107,7 +106,7 @@ class CounterTile extends StatelessWidget {
             },
           ),
           //Counter value display. Can be tapped to edit value directly.
-          InkWell(
+          GestureDetector(
             child: SizedBox(
               //Width should be able to fit 3 digits
               width: 80,
@@ -159,7 +158,7 @@ class CounterTile extends StatelessWidget {
                       onChanged: (value) {
                         setState(() {
                           newValue = int.tryParse(value) ?? -1;
-                          if (newValue > 999 || newValue < 0) newValue = -1;
+                          if (newValue < 0 || newValue > 999) newValue = -1;
                         });
                       },
                     ),
@@ -189,7 +188,7 @@ class CounterTile extends StatelessWidget {
                                   color:
                                       Theme.of(context).colorScheme.onSurface),
                         ),
-                        onPressed: newValue >= 0
+                        onPressed: newValue != -1
                             ? () {
                                 counter.setValue(newValue);
                                 updateFunction.call();

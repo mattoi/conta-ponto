@@ -101,5 +101,5 @@ abstract class UITextStrings {
   static const String dialogTitleAddMultiple = 'Adicionar várias camadas';
   static const String addMultipleHintText = '1';
   static const String actionButtonTooltip =
-      'Adicionar nova camada. Segure para adicionar várias';
+      'Adicionar nova camada\nSegure para adicionar várias';
 }
