@@ -139,6 +139,7 @@ class CounterTile extends StatelessWidget {
                     title: const Text(UITextStrings.dialogTitleSetCounter),
                     //This TextField only accepts number input
                     content: TextField(
+                      style: Theme.of(context).textTheme.bodyMedium,
                       //TODO add errortext
                       autofocus: true,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],

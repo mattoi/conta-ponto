@@ -143,6 +143,8 @@ class _MainPageMobileState extends State<MainPageMobile> {
                 title: const Text(UITextStrings.dialogTitleAddMultiple),
                 //This TextField only accepts number input
                 content: TextField(
+                  style: Theme.of(context).textTheme.bodyMedium,
+
                   //TODO add errortext
                   autofocus: true,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],

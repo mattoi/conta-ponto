@@ -14,7 +14,12 @@ final appTheme = ThemeData.dark().copyWith(
   colorScheme: _appColorScheme,
   appBarTheme: AppBarTheme(
     color: _appColorScheme.primary,
-    titleTextStyle: const TextStyle(fontFamily: _fontFamily, fontSize: 20),
+    titleTextStyle: TextStyle(
+      fontFamily: _fontFamily,
+      fontSize: 20,
+      color: _appColorScheme.onPrimary,
+    ),
+    iconTheme: IconThemeData(color: _appColorScheme.onPrimary),
   ),
   snackBarTheme: SnackBarThemeData(
     backgroundColor: _appColorScheme.surface,
@@ -24,7 +29,6 @@ final appTheme = ThemeData.dark().copyWith(
       color: _appColorScheme.onBackground,
     ),
   ),
-  iconTheme: IconThemeData(color: _appColorScheme.onPrimary),
   backgroundColor: _appColorScheme.background,
   hintColor: _appColorScheme.onSurface,
   floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -32,26 +36,30 @@ final appTheme = ThemeData.dark().copyWith(
   ),
   dialogTheme: DialogTheme(
     backgroundColor: _appColorScheme.surface,
-    titleTextStyle: const TextStyle(
+    titleTextStyle: TextStyle(
       fontFamily: _fontFamily,
       fontSize: 20,
+      color: _appColorScheme.onPrimary,
     ),
-    contentTextStyle: const TextStyle(
+    contentTextStyle: TextStyle(
       fontFamily: _fontFamily,
       fontSize: 16,
+      color: _appColorScheme.onPrimary,
     ),
   ),
   textTheme: TextTheme(
     // 1- and 2-digit index number
-    displayLarge: const TextStyle(
+    displayLarge: TextStyle(
       fontFamily: _fontFamily,
       fontSize: 64,
+      color: _appColorScheme.onPrimary,
     ),
     // 3-digit index number
-    displayMedium: const TextStyle(
+    displayMedium: TextStyle(
       fontFamily: _fontFamily,
       fontSize: 38,
       fontWeight: FontWeight.w900,
+      color: _appColorScheme.onPrimary,
     ),
     // Counter label
     labelMedium: TextStyle(
@@ -60,25 +68,29 @@ final appTheme = ThemeData.dark().copyWith(
       color: _appColorScheme.onSurface,
     ),
     // Counter value
-    headlineLarge: const TextStyle(
+    headlineLarge: TextStyle(
       fontFamily: _fontFamily,
       fontWeight: FontWeight.w900,
+      color: _appColorScheme.onPrimary,
       fontSize: 40,
     ),
     // AppBar title, dialog title
-    titleSmall: const TextStyle(
+    titleSmall: TextStyle(
       fontFamily: _fontFamily,
       fontSize: 20,
+      color: _appColorScheme.onPrimary,
     ),
     // Dialog text, hint text
-    bodyMedium: const TextStyle(
+    bodyMedium: TextStyle(
       fontFamily: _fontFamily,
       fontSize: 16,
+      color: _appColorScheme.onPrimary,
     ),
     // Dialog button
-    bodySmall: const TextStyle(
+    bodySmall: TextStyle(
       fontFamily: _fontFamily,
       fontSize: 14,
+      color: _appColorScheme.onPrimary,
     ),
   ),
 );
